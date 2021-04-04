@@ -1,0 +1,792 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Waiting List API",
+    "description" : "Ambulance Waiting List managegement for Web In Cloud system",
+    "contact" : {
+      "email" : "aa@bb.com"
+    },
+    "license" : {
+      "name" : "CC BY 4.0",
+      "url" : "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "version" : "1.0.0-oas3"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/api"
+  }, {
+    "url" : "http://virtserver.swaggerhub.com/api"
+  } ],
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "developers",
+    "description" : "Operations available to regular developers"
+  } ],
+  "paths" : {
+    "/waiting-list/{ambulanceId}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Provides waiting list of the ambulance",
+        "description" : "By using ambulanceId you can retrieve waiting list of that particular\nambulance.\n",
+        "operationId" : "getAmbulanceDetails",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the ambulanceId of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "array of the waiting list entries",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Ambulance"
+                },
+                "examples" : {
+                  "response" : {
+                    "value" : {
+                      "id" : "dentist-warenova",
+                      "name" : "Zubná ambulancia Dr. Warenová",
+                      "roomNumber" : "356 - 3.posch",
+                      "waitingList" : [ {
+                        "id" : "x321ab3",
+                        "name" : "Jožko Púčik",
+                        "patientId" : "460527-jozef-pucik",
+                        "since" : "2018-12-24T10:05:00.000Z",
+                        "estimated" : "2018-12-24T10:35:00.000Z",
+                        "estimatedDurationMinutes" : 15,
+                        "condition" : {
+                          "value" : "Teploty",
+                          "code" : "subfebrilia",
+                          "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/"
+                        }
+                      }, {
+                        "id" : "x321ab4",
+                        "name" : "Ferdinand Trety",
+                        "patientId" : "780907-ferdinand-tre",
+                        "since" : "2018-12-24T10:25:00.000Z",
+                        "estimated" : "2018-12-24T10:50:00.000Z",
+                        "estimatedDurationMinutes" : 25,
+                        "condition" : {
+                          "value" : "Nevoľnosť",
+                          "code" : "nausea",
+                          "reference" : "https://zdravoteka.sk/priznaky/nevolnost/"
+                        }
+                      } ],
+                      "predefinedConditions" : [ {
+                        "value" : "Teploty",
+                        "code" : "subfebrilia",
+                        "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/",
+                        "typicalDurationMinutes" : 20
+                      }, {
+                        "value" : "Nevoľnosť",
+                        "code" : "nausea",
+                        "reference" : "https://zdravoteka.sk/priznaky/nevolnost/",
+                        "typicalDurationMinutes" : 45
+                      }, {
+                        "value" : "Kontrola",
+                        "code" : "followup",
+                        "typicalDurationMinutes" : 15
+                      }, {
+                        "value" : "Administratívny úkon",
+                        "code" : "administration",
+                        "typicalDurationMinutes" : 10
+                      }, {
+                        "value" : "Odber krvy",
+                        "code" : "blood-test",
+                        "typicalDurationMinutes" : 10
+                      } ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ambulance with such ID does not exists"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "Creates new ambulance",
+        "description" : "Stores new ambulance.",
+        "operationId" : "createAmbulanceDetails",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the ambulanceId of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Ambulance template",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Ambulance"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "ambulance create"
+          },
+          "403" : {
+            "description" : "Ambulance with such ID already exists"
+          }
+        }
+      }
+    },
+    "/waiting-list/{ambulanceId}/entry" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Provides the ambulance waiting list",
+        "description" : "By using ambulanceId you get list of entries in ambulance witing list",
+        "operationId" : "getWaitingListEntries",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "value of the waiting list entries",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/WaitingListEntry"
+                  },
+                  "x-content-type" : "application/json"
+                },
+                "examples" : {
+                  "response" : {
+                    "value" : [ {
+                      "id" : "x321ab3",
+                      "name" : "Jožko Púčik",
+                      "patientId" : "460527-jozef-pucik",
+                      "since" : "2018-12-24T10:05:00.000Z",
+                      "estimated" : "2018-12-24T10:35:00.000Z",
+                      "estimatedDurationMinutes" : 15,
+                      "condition" : {
+                        "value" : "Teploty",
+                        "code" : "subfebrilia",
+                        "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/"
+                      }
+                    }, {
+                      "id" : "x321ab4",
+                      "name" : "Ferdinand Trety",
+                      "patientId" : "780907-ferdinand-tre",
+                      "since" : "2018-12-24T10:25:00.000Z",
+                      "estimated" : "2018-12-24T10:50:00.000Z",
+                      "estimatedDurationMinutes" : 25,
+                      "condition" : {
+                        "value" : "Nevoľnosť",
+                        "code" : "nausea",
+                        "reference" : "https://zdravoteka.sk/priznaky/nevolnost/"
+                      }
+                    } ]
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ambulance with such ID does not exists"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Saves new entry into waiting list",
+        "description" : "Use this method to store new entry into the waiting list.",
+        "operationId" : "storeWaitingListEntry",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Waiting list entry to store",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WaitingListEntry"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Value of the waiting list entry with re-computed estimated time of ambulance entry",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WaitingListEntry"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Missing mandatory properties of input object."
+          },
+          "404" : {
+            "description" : "Ambulance with such ID does not exists"
+          }
+        }
+      }
+    },
+    "/waiting-list/{ambulanceId}/entry/{entryId}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Provides details about waiting list entry",
+        "description" : "By using ambulanceId and entryId you can details of particular entry item ambulance.",
+        "operationId" : "getWaitingListEntry",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "entryId",
+          "in" : "path",
+          "description" : "pass the id of the particular entry in the waiting list",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "value of the waiting list entries",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WaitingListEntry"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ambulance or Entry with such ID does not exists"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Updates specific entry",
+        "description" : "Use this method to update content of the waiting list entry.",
+        "operationId" : "updateWaitingListEntry",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "entryId",
+          "in" : "path",
+          "description" : "pass the id of the particular entry in the waiting list",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Waiting list entry to update",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/WaitingListEntry"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "value of the waiting list entry with re-computed estimated time of ambulance entry",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/WaitingListEntry"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Value of the entryID and the data id is mismatching. Detail s are provided in the response body."
+          },
+          "404" : {
+            "description" : "Ambulance or Entry with such ID does not exists"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "developers" ],
+        "summary" : "Deletes specific entry",
+        "description" : "Use this method to delete the specific entry from the waiting list.",
+        "operationId" : "deleteWaitingListEntry",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "entryId",
+          "in" : "path",
+          "description" : "pass the id of the particular entry in the waiting list",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item deleted"
+          },
+          "404" : {
+            "description" : "Ambulance or Entry with such ID does not exists"
+          }
+        }
+      }
+    },
+    "/waiting-list/{ambulanceId}/condition" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Provides the list of conditions associated with ambulance",
+        "description" : "By using ambulanceId you get list of predefined conditions",
+        "operationId" : "getConditions",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "value of the predefined conditions",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Condition"
+                  },
+                  "x-content-type" : "application/json"
+                },
+                "examples" : {
+                  "response" : {
+                    "value" : [ {
+                      "value" : "Teploty",
+                      "code" : "subfebrilia",
+                      "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/",
+                      "typicalDurationMinutes" : 20
+                    }, {
+                      "value" : "Nevoľnosť",
+                      "code" : "nausea",
+                      "reference" : "https://zdravoteka.sk/priznaky/nevolnost/",
+                      "typicalDurationMinutes" : 45
+                    }, {
+                      "value" : "Kontrola",
+                      "code" : "followup",
+                      "typicalDurationMinutes" : 15
+                    }, {
+                      "value" : "Administratívny úkon",
+                      "code" : "administration",
+                      "typicalDurationMinutes" : 10
+                    }, {
+                      "value" : "Odber krvy",
+                      "code" : "blood-test",
+                      "typicalDurationMinutes" : 10
+                    } ]
+                  }
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ambulance with such ID does not exists"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "Saves new predefined condition",
+        "description" : "Use this method to associate new predefined condition with the ambulance",
+        "operationId" : "storeCondition",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Associated condition",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Condition"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Value was stored"
+          },
+          "400" : {
+            "description" : "Missing mandatory properties of input object."
+          },
+          "404" : {
+            "description" : "Ambulance with such ID does not exists"
+          }
+        }
+      }
+    },
+    "/waiting-list/{ambulanceId}/condition/{conditionCode}" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "Provides details about waiting list entry",
+        "description" : "By using ambulanceId and conditionCode you can get details of associated predefined condition.",
+        "operationId" : "getCondition",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "conditionCode",
+          "in" : "path",
+          "description" : "pass the code of the particular condition",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "value of the requested condition",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Condition"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Ambulance with such ID or Condition with such code does not exists"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "developers" ],
+        "summary" : "Updates specific condition",
+        "description" : "Use this method to update content of the associated predefined condition.",
+        "operationId" : "updateCondition",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "conditionCode",
+          "in" : "path",
+          "description" : "pass the code of the particular condition",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Condition to update",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Condition"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Value updated"
+          },
+          "403" : {
+            "description" : "Value of the conditionCode and the code in data are mismatching. Details are provided in the response body."
+          },
+          "404" : {
+            "description" : "Ambulance with such"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "admins" ],
+        "summary" : "Deletes specific associated condition",
+        "description" : "Use this method to delete the specific condition from the list of associated predefined conditions for this ambulance",
+        "operationId" : "deleteCondition",
+        "parameters" : [ {
+          "name" : "ambulanceId",
+          "in" : "path",
+          "description" : "pass the id of the particular ambulance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "conditionCode",
+          "in" : "path",
+          "description" : "pass the code of the particular condition",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item deleted"
+          },
+          "404" : {
+            "description" : "Ambulance with such ID or Condition with such code does not exists"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Ambulance" : {
+        "required" : [ "id", "name", "roomNumber" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier of the ambulance",
+            "example" : "dentist-warenova"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Human readable display name of the ambulance",
+            "example" : "Zubná ambulancia Dr. Warenová"
+          },
+          "roomNumber" : {
+            "type" : "string",
+            "example" : "356 - 3.posch"
+          },
+          "waitingList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/WaitingListEntry"
+            }
+          },
+          "predefinedConditions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Condition"
+            }
+          }
+        },
+        "example" : {
+          "roomNumber" : "356 - 3.posch",
+          "waitingList" : [ {
+            "condition" : {
+              "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/",
+              "code" : "subfebrilia",
+              "typicalDurationMinutes" : 20,
+              "value" : "Teploty"
+            },
+            "patientId" : "460527-jozef-pucik",
+            "estimatedDurationMinutes" : 15,
+            "name" : "Jožko Púčik",
+            "estimated" : "2018-12-24T10:35:00Z",
+            "id" : "x321ab3",
+            "since" : "2018-12-24T10:05:00Z"
+          }, {
+            "condition" : {
+              "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/",
+              "code" : "subfebrilia",
+              "typicalDurationMinutes" : 20,
+              "value" : "Teploty"
+            },
+            "patientId" : "460527-jozef-pucik",
+            "estimatedDurationMinutes" : 15,
+            "name" : "Jožko Púčik",
+            "estimated" : "2018-12-24T10:35:00Z",
+            "id" : "x321ab3",
+            "since" : "2018-12-24T10:05:00Z"
+          } ],
+          "name" : "Zubná ambulancia Dr. Warenová",
+          "id" : "dentist-warenova",
+          "predefinedConditions" : [ null, null ]
+        }
+      },
+      "WaitingListEntry" : {
+        "required" : [ "estimatedDurationMinutes", "id", "patientId", "since" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique id of the entry in this waiting list",
+            "example" : "x321ab3"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Name of patient in waiting list",
+            "example" : "Jožko Púčik"
+          },
+          "patientId" : {
+            "type" : "string",
+            "description" : "Unique identifier of the patient known to Web In Cloud system",
+            "example" : "460527-jozef-pucik"
+          },
+          "since" : {
+            "type" : "string",
+            "description" : "Timestamp since when the patient entered the waiting list",
+            "format" : "date-time",
+            "example" : "2018-12-24T10:05:00Z"
+          },
+          "estimated" : {
+            "type" : "string",
+            "description" : "Estimated time of entering ambulance. Ignored on post.",
+            "format" : "date-time",
+            "example" : "2018-12-24T10:35:00Z"
+          },
+          "estimatedDurationMinutes" : {
+            "type" : "integer",
+            "description" : "Estimated duration of ambulance visit. If not provided then it will be computed based on condition and ambulance settings",
+            "format" : "int32",
+            "example" : 15
+          },
+          "condition" : {
+            "$ref" : "#/components/schemas/Condition"
+          }
+        },
+        "example" : {
+          "condition" : {
+            "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/",
+            "code" : "subfebrilia",
+            "typicalDurationMinutes" : 20,
+            "value" : "Teploty"
+          },
+          "patientId" : "460527-jozef-pucik",
+          "estimatedDurationMinutes" : 15,
+          "name" : "Jožko Púčik",
+          "estimated" : "2018-12-24T10:35:00Z",
+          "id" : "x321ab3",
+          "since" : "2018-12-24T10:05:00Z"
+        }
+      },
+      "Condition" : {
+        "required" : [ "value" ],
+        "properties" : {
+          "value" : {
+            "type" : "string",
+            "example" : "Teploty"
+          },
+          "code" : {
+            "type" : "string",
+            "example" : "subfebrilia"
+          },
+          "reference" : {
+            "type" : "string",
+            "description" : "Link to encyclopedical explanation of the patient's condition",
+            "format" : "url",
+            "example" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/"
+          },
+          "typicalDurationMinutes" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 20
+          }
+        },
+        "description" : "Describes disease, symptoms, or other reasons of patient visit",
+        "example" : {
+          "reference" : "https://zdravoteka.sk/priznaky/zvysena-telesna-teplota/",
+          "code" : "subfebrilia",
+          "typicalDurationMinutes" : 20,
+          "value" : "Teploty"
+        }
+      }
+    }
+  }
+}

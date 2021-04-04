@@ -1,0 +1,32 @@
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+    <mat-panel-title>
+        <mat-icon>account_circle</mat-icon>
+        <span>  {{data.name}} </span>
+    </mat-panel-title>
+    <mat-panel-description>
+         {{data.estimated | date:'shortTime'}}
+    </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+    <input matInput
+            placeholder="Čaká od"
+            [value]="data.since|date:'shortTime'"
+            readonly>
+    </mat-form-field>
+        
+    <mat-form-field>
+        <input matInput placeholder="Dôvod návštevy" [value]="data.condition.value" readonly>
+    </mat-form-field>
+
+    <mat-form-field>
+    <input matInput
+            placeholder="Predpokladaná doba návštevy [minúty]"
+            type="number"
+            [value]="data.estimatedDurationMinutes"
+            readonly>
+    </mat-form-field>
+    <mat-action-row>
+        <button mat-button (click)="delete.emit(data)">Odstrániť záznam</button>
+     </mat-action-row>
+</mat-expansion-panel>

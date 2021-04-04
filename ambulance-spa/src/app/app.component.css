@@ -1,0 +1,7 @@
+mat-toolbar mat-icon {
+    margin-top: -.5em;
+    margin-right: 2ex;
+    font-size: 200%;
+}
+
+.app-content { margin: .5em; }

@@ -1,0 +1,6 @@
+<mat-accordion [multi]="true">
+    <ng-container *ngFor="let entry of (patients | async)">
+        <app-waiting-entry [data]="entry" (delete)="onDelete($event)"></app-waiting-entry>
+    </ng-container>
+    <a mat-fab [routerLink]="['/patients-list', 'new']" class="add-new"><mat-icon>add</mat-icon></a>
+</mat-accordion>

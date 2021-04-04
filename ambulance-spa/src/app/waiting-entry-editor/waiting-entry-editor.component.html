@@ -1,0 +1,49 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Informácie o čakajúcom</mat-card-title>
+    </mat-card-header>
+    <ng-container *ngIf="data$ | async as data">
+        <mat-card-content>
+            <p>
+            Vložte informácie o dôvode Vašej návštevy a usaďte sa
+            </p>
+            
+            <mat-form-field>
+                <input matInput placeholder="Meno a priezvisko"
+                    [(ngModel)]="data.name">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Registračné číslo pacienta" type="number"
+                    [(ngModel)]="data.patientId">
+                <mat-hint>Registračné čislo nájdete na kartičke pacienta</mat-hint>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Čakáte od"
+                    [value]="data.since|date:'shortTime'" readonly>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-select placeholder="Dôvod návštevy" [(value)]="data.condition" [compareWith]="compareConditionsFn">
+                    <mat-option *ngFor="let condition of knownConditions$|async" [value]="condition">
+                        {{condition.value}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <p>
+                <span>Predpokladaná doba návštevy</span>
+                <span class='slider-with-label'>
+                <mat-slider placeholder="Predpokladaná doba návštevy [minúty]"
+                            min="5" max="60" step="5" thumbLabel="true"
+                            [(value)]="data.estimatedDurationMinutes">
+                </mat-slider>
+                {{data.estimatedDurationMinutes}} minút
+                </span>
+            </p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button (click)="onUpsertEntry(data)" >Uložiť</button>
+            <button mat-button [routerLink]="['/patients-list']">Zrušiť</button>
+        </mat-card-actions>
+    </ng-container>
+ </mat-card>

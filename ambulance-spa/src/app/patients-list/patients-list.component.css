@@ -1,0 +1,14 @@
+mat-accordion {
+    width: 800px;
+    display: block;
+    margin: auto;
+}
+
+.add-new {
+    position: absolute;
+    right: 48px;
+    bottom: 32px;
+}
+/*mat-expansion-panel-header mat-icon, mat-form-field { margin-right: 1rem; }
+
+input[type=number] { text-align: right; } */
